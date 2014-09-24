@@ -8,35 +8,71 @@
                 ignore : null // Selector or jQuery object of elements to ignore
             },
             options,
+            html5Callback = function(event) {
+
+                // Doesn't work in Firefox
+                if (userAgent.indexOf('firefox') == -1)
+                {
+                    if (userAgent.indexOf("chrome") !== -1) {
+                        setTimeout(function() {
+                            methods.removeHandler();
+                            document.location.href = options.url;
+                        },300);
+                    } else {
+                        methods.removeHandler();
+                        document.location.href = options.url;
+                    }
+                }
+
+                event.returnValue = options.message;
+
+                return options.message;
+            },
+            ieCallback = function(event) {
+                event.returnValue = options.message;
+                return options.message;
+            },
+            callback = function(event) {
+
+                if (userAgent.indexOf("chrome") !== -1) {
+                    setTimeout(function() {
+                        window.onbeforeunload = function() {};
+                        document.location.href = options.url;
+                    },300);
+                } else {
+                    window.onbeforeunload = function() {};
+                    document.location.href = options.url;
+                }
+
+                // For Old IE
+                if (e) {
+                    e.returnValue = options.message;
+                }
+
+                // For Chrome
+                return options.message;
+            },
             methods = {
                 init : function(settings) {
                     options = $.extend({}, defaults, settings);
-
 
                     methods.addHandler();
                 },
                 addHandler : function() {
 
-                    window.onbeforeunload = function(e) {
 
-                        if (userAgent.indexOf("chrome") !== -1) {
-                            setTimeout(function() {
-                                window.onbeforeunload = function() {};
-                                document.location.href = options.url;
-                            },300);
-                        } else {
-                            window.onbeforeunload = function() {};
-                            document.location.href = options.url;
-                        }
-
-                        // For Old IE
-                        if (e) {
-                            e.returnValue = options.message;
-                        }
-
-                        // For Chrome
-                        return options.message;
-                    };
+                    if (window.addEventListener)
+                    {
+                        window.addEventListener('beforeunload', html5Callback, false);
+                    }
+                    else if (window.attachEvent)
+                    {
+                        window.attachEvent('onbeforeunload', ieCallback);
+                    }
+                    else
+                    {
+                        window.onbeforeunload = callback;
+                    }
 
                     if (options.ignore)
                     {
@@ -47,7 +83,19 @@
 
                 },
                 removeHandler : function() {
-                    window.onbeforeunload = function() {};
+
+                    if (window.addEventListener)
+                    {
+                        window.removeEventListener('beforeunload', html5Callback);
+                    }
+                    else if (window.attachEvent)
+                    {
+                        window.removeEventListener('beforeunload', ieCallback);
+                    }
+                    else
+                    {
+                        window.onbeforeunload = function() {};
+                    }
                 }
             };
 
