@@ -13,19 +13,12 @@
             options,
             html5Callback = function(event) {
 
-                // Doesn't work in Firefox
-                if (userAgent.indexOf('firefox') == -1)
-                {
-                    if (userAgent.indexOf("chrome") !== -1) {
-                        setTimeout(function() {
-                            methods.removeHandler();
-                            document.location.href = options.url;
-                        },300);
-                    } else {
+                setTimeout(function() {
+                    setTimeout(function() {
                         methods.removeHandler();
                         document.location.href = options.url;
-                    }
-                }
+                    },500);
+                },5);
 
                 event.returnValue = options.message;
 
