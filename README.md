@@ -2,7 +2,7 @@
 
 Normalises exit pop behaviour across browsers. Except safari which doesn't support the `onbeforeunload` event.
 
-## Current Version - 2.0.0
+## Current Version - 2.1.0
 
 ## Installation
 
