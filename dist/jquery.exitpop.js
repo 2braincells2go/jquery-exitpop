@@ -1,7 +1,7 @@
-/*! jQuery Exitpop Plugin - v2.0.0 - 2014-09-24
+/*! jQuery Exitpop Plugin - v2.1.0 - 2014-11-08
 * https://github.com/tomgrohl/jquery-exitpop/
 * Copyright (c) 2014 Tom Ellis; Licensed MIT */
-(function($) {
+(function($, w) {
 
     $.exitpop = function(method /*,options*/) {
         var userAgent = navigator.userAgent.toString().toLowerCase(),
@@ -11,39 +11,18 @@
                 ignore : null // Selector or jQuery object of elements to ignore
             },
             options,
-            html5Callback = function(event) {
+            callback = function(event) {
+
+                methods.removeHandler();
 
                 setTimeout(function() {
                     setTimeout(function() {
-                        methods.removeHandler();
                         document.location.href = options.url;
                     },500);
                 },5);
 
-                event.returnValue = options.message;
-
-                return options.message;
-            },
-            ieCallback = function(event) {
-                event.returnValue = options.message;
-                return options.message;
-            },
-            callback = function(event) {
-
-                if (userAgent.indexOf("chrome") !== -1) {
-                    setTimeout(function() {
-                        window.onbeforeunload = function() {};
-                        document.location.href = options.url;
-                    },300);
-                } else {
-                    window.onbeforeunload = function() {};
-                    document.location.href = options.url;
-                }
-
-                // For Old IE
-                if (e) {
-                    e.returnValue = options.message;
-                }
+                // Use event off window object for old IE
+                (event || w.event).returnValue = options.message;
 
                 // For Chrome
                 return options.message;
@@ -56,23 +35,10 @@
                 },
                 addHandler : function() {
 
+                    w.onbeforeunload = callback;
 
-                    if (window.addEventListener)
-                    {
-                        window.addEventListener('beforeunload', html5Callback, false);
-                    }
-                    else if (window.attachEvent)
-                    {
-                        window.attachEvent('onbeforeunload', ieCallback);
-                    }
-                    else
-                    {
-                        window.onbeforeunload = callback;
-                    }
-
-                    if (options.ignore)
-                    {
-                        $(options.ignore).on('click', function() {
+                    if (options.ignore) {
+                        $(options.ignore).on('click.exitpop', function() {
                             methods.removeHandler();
                         });
                     }
@@ -80,28 +46,25 @@
                 },
                 removeHandler : function() {
 
-                    if (window.addEventListener)
-                    {
-                        window.removeEventListener('beforeunload', html5Callback);
+                    if (options.ignore) {
+                        $(options.ignore).off('click.exitpop');
                     }
-                    else if (window.attachEvent)
-                    {
-                        window.removeEventListener('beforeunload', ieCallback);
-                    }
-                    else
-                    {
-                        window.onbeforeunload = function() {};
+
+                    if (w.attachEvent) {
+                        w.onbeforeunload = undefined;
+                    } else {
+                        w.onbeforeunload = null;
                     }
                 }
             };
 
         if (methods[method]) {
-            return methods[method].apply( this, slice.call( arguments, 1 ) );
-        } else if ( typeof method === "object" || !method ) {
-            return methods.init.apply( this, arguments );
+            return methods[method].apply(this, Array.prototype.slice.call( arguments, 1));
+        } else if (typeof method === "object" || !method) {
+            return methods.init.apply(this, arguments);
         } else {
-            $.error("Method " + method + " does not exist in the [plugin_name] Plugin");
+            $.error("Method " + method + " does not exist in the jQuery Exitpop Plugin");
         }
     };
 
-})(jQuery);
+})(jQuery, window);

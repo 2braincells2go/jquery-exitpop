@@ -1,0 +1,25 @@
+<script src="jquery.min.js"></script>
+<script src="../src/jquery.exitpop.js"></script>
+
+<a id="a-link" href="http://github.com">Click Me</a>
+
+<button id="add-btn">Add Exitpop</button>
+<button id="remove-btn">Remove Exitpop</button>
+
+<script>
+    $(document).ready(function() {
+        $.exitpop({
+            'url' : 'http://google.com',
+            'message': 'Bye'
+        });
+
+        $('#add-btn').on('click', function() {
+            $.exitpop();
+        });
+
+        $('#remove-btn').on('click', function() {
+            $.exitpop('removeHandler');
+        });
+
+    });
+</script>
