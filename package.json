@@ -2,7 +2,7 @@
 	"name": "jquery.exitpop",
 	"title": "jQuery Exitpop Plugin",
 	"description": "jQuery Exitpop Plugin.",
-	"version": "2.1.0",
+	"version": "2.2.0",
 	"homepage": "https://github.com/tomgrohl/jquery-exitpop/",
 	"author": {
   		"name": "Tom Ellis",

@@ -5,12 +5,15 @@
             defaults = {
                 url : "", // URL to pop to
                 message : "", // Message to display
-                ignore : null // Selector or jQuery object of elements to ignore
+                ignore : null, // Selector or jQuery object of elements to ignore,
+                callback: $.noop() // Custom callback to call
             },
             options,
             callback = function(event) {
 
                 methods.removeHandler();
+
+                options.callback();
 
                 setTimeout(function() {
                     setTimeout(function() {

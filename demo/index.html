@@ -10,7 +10,10 @@
     $(document).ready(function() {
         $.exitpop({
             'url' : 'http://google.com',
-            'message': 'Bye'
+            'message': 'Bye',
+            callback: function() {
+                console.log('hello');
+            }
         });
 
         $('#add-btn').on('click', function() {

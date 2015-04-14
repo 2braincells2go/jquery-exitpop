@@ -1,6 +1,6 @@
-/*! jQuery Exitpop Plugin - v2.1.0 - 2014-11-08
+/*! jQuery Exitpop Plugin - v2.2.0 - 2015-04-14
 * https://github.com/tomgrohl/jquery-exitpop/
-* Copyright (c) 2014 Tom Ellis; Licensed MIT */
+* Copyright (c) 2015 Tom Ellis; Licensed MIT */
 (function($, w) {
 
     $.exitpop = function(method /*,options*/) {
@@ -8,12 +8,15 @@
             defaults = {
                 url : "", // URL to pop to
                 message : "", // Message to display
-                ignore : null // Selector or jQuery object of elements to ignore
+                ignore : null, // Selector or jQuery object of elements to ignore,
+                callback: $.noop() // Custom callback to call
             },
             options,
             callback = function(event) {
 
                 methods.removeHandler();
+
+                options.callback();
 
                 setTimeout(function() {
                     setTimeout(function() {
