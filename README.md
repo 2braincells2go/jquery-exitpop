@@ -2,7 +2,7 @@
 
 Normalises exit pop behaviour across browsers. Except safari which doesn't support the `onbeforeunload` event.
 
-## Current Version - 2.1.0
+## Current Version - 2.2.0
 
 ## Installation
 
@@ -24,6 +24,8 @@ Get any of the releases from https://github.com/tomgrohl/jquery-exitpop/releases
 	      Message to show
 	ignore - null
 	      Selector or jQuery object of DOM elements to ignore
+    callback - $.noop()
+          A closure to run before the exitpop URL redirect
 
 ## Usage
 
@@ -42,4 +44,4 @@ $(document).ready(function(){
 
 This plugin is licensed under the MIT License (LICENSE.txt).
 
-Copyright (c) 2014 [Tom Ellis](http://www.webmuse.co.uk)
+Copyright (c) 2015 [Tom Ellis](http://www.webmuse.co.uk)
